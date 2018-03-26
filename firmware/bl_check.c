@@ -42,7 +42,7 @@ int known_bootloader(int r, const uint8_t *hash) {
 
 void check_bootloader(void)
 {
-	uint8_t hash[32];
+	//uint8_t hash[32];
 	//int r = memory_bootloader_hash(hash);
 
 	//if (!known_bootloader(r, hash)) {

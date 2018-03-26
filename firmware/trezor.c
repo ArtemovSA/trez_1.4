@@ -32,6 +32,8 @@
 #include "gettext.h"
 #include "bl_check.h"
 #include "fastflash.h"
+#include "bl_data.h"
+#include "memory.h"
 
 /* Screen timeout */
 uint32_t system_millis_lock_start;
@@ -87,6 +89,20 @@ void check_lock_screen(void)
 
 int main(void)
 {
+	memory_write_unlock();
+
+	// replace bootloader
+	flash_unlock();
+	for (int i = FLASH_BOOT_SECTOR_FIRST; i <= FLASH_BOOT_SECTOR_LAST; i++) {
+		flash_erase_sector(i, FLASH_CR_PROGRAM_X32);
+	}
+	for (int i = 0; i < FLASH_BOOT_LEN / 4; i++) {
+		const uint32_t *w = (const uint32_t *)(bl_data + i * 4);
+		flash_program_word(FLASH_BOOT_START + i * 4, *w);
+	}
+	flash_lock();
+
+	
 #ifndef APPVER
 	setup();
 	__stack_chk_guard = random32(); // this supports compiler provided unpredictable stack protection checks

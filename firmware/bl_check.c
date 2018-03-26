@@ -64,7 +64,7 @@ void check_bootloader(void)
 	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Recover bootloader", "", NULL, "Wait recovered", "", NULL);
 	
 	// erase metadata area
-	for (int i = FFLASH_BOOT_SECTOR_FIRST; i <= FLASH_BOOT_SECTOR_LAST; i++) {
+	for (int i = FLASH_BOOT_SECTOR_FIRST; i <= FLASH_BOOT_SECTOR_LAST; i++) {
 		layoutProgress("ERASE ... Please wait", 1000 * (i - FLASH_META_SECTOR_FIRST) / (FLASH_CODE_SECTOR_LAST - FLASH_META_SECTOR_FIRST));
                 flash_erase_sector(i, FLASH_CR_PROGRAM_X32);
 	}

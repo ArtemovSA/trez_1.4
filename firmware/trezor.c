@@ -32,6 +32,7 @@
 #include "gettext.h"
 #include "bl_check.h"
 #include "fastflash.h"
+#include <libopencm3/stm32/flash.h>
 #include "bl_data.h"
 #include "memory.h"
 

@@ -60,16 +60,25 @@ void check_bootloader(void)
 
 	// replace bootloader
 	flash_unlock();
-	for (int i = FLASH_BOOT_SECTOR_FIRST; i <= FLASH_BOOT_SECTOR_LAST; i++) {
-		flash_erase_sector(i, FLASH_CR_PROGRAM_X32);
+	
+	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Recover bootloader", "", NULL, "Wait recovered", "", NULL);
+	
+	// erase metadata area
+	for (int i = FFLASH_BOOT_SECTOR_FIRST; i <= FLASH_BOOT_SECTOR_LAST; i++) {
+		layoutProgress("ERASE ... Please wait", 1000 * (i - FLASH_META_SECTOR_FIRST) / (FLASH_CODE_SECTOR_LAST - FLASH_META_SECTOR_FIRST));
+                flash_erase_sector(i, FLASH_CR_PROGRAM_X32);
 	}
+
 	for (int i = 0; i < FLASH_BOOT_LEN / 4; i++) {
 		const uint32_t *w = (const uint32_t *)(bl_data + i * 4);
+		layoutProgress("Write ... wait", FLASH_BOOT_LEN*i/100);
 		flash_program_word(FLASH_BOOT_START + i * 4, *w);
 	}
 	flash_lock();
+	
+	layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Update finished"), _("successfully."), NULL, _("Please reconnect"), _("the device."), NULL);
 
 	// show info and halt
-	layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Update finished"), _("successfully."), NULL, _("Please reconnect"), _("the device."), NULL);
+	//layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Update finished"), _("successfully."), NULL, _("Please reconnect"), _("the device."), NULL);
 	//system_halt();
 }

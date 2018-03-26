@@ -87,9 +87,9 @@ void check_lock_screen(void)
 
 int main(void)
 {
-	check_bootloader();
 #ifndef APPVER
 	setup();	
+	check_bootloader();
 	__stack_chk_guard = random32(); // this supports compiler provided unpredictable stack protection checks
 	oledInit();
 #else
